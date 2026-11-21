@@ -1,0 +1,10 @@
+BTH5 – KẾT QUẢ KIỂM THỬ
+Ngày: 21/11/2026
+Lệnh: mvn clean verify
+Kết quả build: thành công
+
+com.example.bth5report.ReportApiIntegrationTest: 2 tests, 0 failures, 0 errors, 0 skipped
+com.example.bth5report.ReportHttpTest: 5 tests, 0 failures, 0 errors, 0 skipped
+com.example.bth5report.ReportMathTest: 5 tests, 0 failures, 0 errors, 0 skipped
+
+Database test: H2. BTH2/BTH3/BTH4 được mock hoặc HTTP stub. Chưa chạy với MySQL và các service thật trên máy người dùng.

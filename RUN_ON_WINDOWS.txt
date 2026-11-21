@@ -1,0 +1,12 @@
+BTH5 – HUONG DAN NHANH STS/ECLIPSE
+1. MySQL Workbench: chay toan bo database.sql tao BTH5_REPORT.
+2. STS: File > Import > Maven > Existing Maven Projects.
+3. Chon thu muc BTH5-Report-Service co pom.xml, dung JDK 21.
+4. Run Configurations > Spring Boot App > Bth5ReportApplication > Environment:
+   DB_USER=root
+   DB_PASSWORD=<mat khau MySQL cua ban>
+5. Chay BTH2 (8080), BTH3 (8081), BTH4 (8082), BTH5 (8083).
+6. Import Postman collection, dien token JWT BTH2, productId va unitCost.
+7. Nhap gia von, POST /reports/generate, GET /reports/products, GET /reports/orders.
+8. Chi don completed duoc tinh doanh thu. Thieu gia von tra 422.
+Huong dan chi tiet va cong thuc trong README.md.

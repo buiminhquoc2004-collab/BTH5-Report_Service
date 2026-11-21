@@ -1,0 +1,218 @@
+{
+  "info": {
+    "name": "BTH5 - Report Service SOA",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Reports across Product BTH3 (8081) and Order BTH4 (8082). Set productId to an existing ID, set cost, then generate."
+  },
+  "item": [
+    {
+      "name": "00 - GET BTH3 products",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "01 - GET BTH4 orders",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8082/orders"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02 - PUT product cost",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{reportBase}}/costs/{{productId}}"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"unitCost\": {{unitCost}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - GET costs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{reportBase}}/costs"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 - POST generate report",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{reportBase}}/reports/generate"
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Created report 201\", () => pm.response.to.have.status(201));",
+              "if (pm.response.code === 201) {",
+              "    const data = pm.response.json();",
+              "    pm.collectionVariables.set('reportId', String(data.summary.id));",
+              "    pm.test(\"Profit = revenue - cost\", () => pm.expect(Number(data.totalProfit)).to.be.closeTo(Number(data.totalRevenue)-Number(data.totalCost),0.01));",
+              "    pm.test(\"Product and order lists exist\", () => {",
+              "        pm.expect(data.products).to.be.an('array');",
+              "        pm.expect(data.orders).to.be.an('array');",
+              "    });",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 - GET latest report",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{reportBase}}/reports/latest"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06 - GET report by product",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{reportBase}}/reports/products"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07 - GET report by order",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{reportBase}}/reports/orders"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08 - GET report history",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{reportBase}}/reports"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "09 - GET report by saved id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{reportBase}}/reports/{{reportId}}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10 - GET saved products",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{reportBase}}/reports/{{reportId}}/products"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "11 - GET saved orders",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{reportBase}}/reports/{{reportId}}/orders"
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "reportBase",
+      "value": "http://localhost:8083"
+    },
+    {
+      "key": "productId",
+      "value": "1"
+    },
+    {
+      "key": "reportId",
+      "value": "1"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "unitCost",
+      "value": "60000"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  }
+}
